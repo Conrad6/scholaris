@@ -16,6 +16,20 @@
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false
+    "noFallthroughCasesInSwitch": false,
+    "paths": {
+      "@scholaris/data-storage": [
+        "libs/data-storage/src"
+      ],
+      "@scholaris/data-storage/*": [
+        "libs/data-storage/src/*"
+      ],
+      "@scholaris/domain": [
+        "libs/domain/src"
+      ],
+      "@scholaris/domain/*": [
+        "libs/domain/src/*"
+      ]
+    }
   }
 }
