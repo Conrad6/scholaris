@@ -1,10 +1,11 @@
 import { ApplicationConfig, importProvidersFrom } from '@angular/core';
 import { provideRouter, withEnabledBlockingInitialNavigation } from '@angular/router';
 import { provideAnimations } from '@angular/platform-browser/animations';
-import { provideFirebaseApp } from '@angular/fire/app';
+import { getApp, provideFirebaseApp } from '@angular/fire/app';
 
 import { routes } from './app.routes';
-import { initializeApp } from '@firebase/app';
+import { initializeApp } from '@angular/fire/app';
+import { provideFirestore } from '@angular/fire/firestore';
 
 export const appConfig: ApplicationConfig = {
   providers: [
