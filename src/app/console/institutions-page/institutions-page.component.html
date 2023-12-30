@@ -1,1 +1,13 @@
-<p>institutions-page works!</p>
+<p-toolbar styleClass="rounded-none">
+  <div class="p-toolbar-group-start">
+    <p-button
+      [link]="true"
+      [text]="true"
+      routerLink="new"
+      queryParamsHandling="merge"
+      size="small"
+      icon="pi pi-plus"
+      pTooltip="Create an Institution"
+    ></p-button>
+  </div>
+</p-toolbar>
