@@ -1,5 +1,13 @@
 <p-toolbar styleClass="rounded-none">
   <div class="p-toolbar-group-start">
+    <p-inputGroup>
+      <p-inputGroupAddon>
+        <i class="pi pi-search"></i>
+      </p-inputGroupAddon>
+      <input pInputText type="search" placeholder="Search" class="p-1" />
+    </p-inputGroup>
+  </div>
+  <div class="p-toolbar-group-end">
     <p-button
       [link]="true"
       [text]="true"

@@ -4,6 +4,9 @@ import { ToolbarModule } from 'primeng/toolbar';
 import { ButtonModule } from 'primeng/button';
 import { TooltipModule } from 'primeng/tooltip';
 import { RouterLink } from '@angular/router';
+import { InputTextModule } from 'primeng/inputtext';
+import { InputGroupModule } from 'primeng/inputgroup';
+import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 
 @Component({
   selector: 'app-institutions-page',
@@ -12,6 +15,9 @@ import { RouterLink } from '@angular/router';
     DataViewModule,
     TooltipModule,
     RouterLink,
+    InputTextModule,
+    InputGroupModule,
+    InputGroupAddonModule,
     ToolbarModule,
     ButtonModule
   ],
