@@ -21,3 +21,7 @@ export type UserStateModel = {
     session?: Models.Session,
     logo?: string
 }
+
+export type Institution = Models.Document & {
+    name: string;
+}

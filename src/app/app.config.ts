@@ -13,7 +13,7 @@ import { UserState } from './state/user.state';
 export const appConfig: ApplicationConfig = {
   providers: [
     {
-      provide: Client, useValue: new Client().setEndpoint('https://cbness.store/v1').setProject('6586b572b4b54e7b58b7')
+      provide: Client, useValue: new Client().setEndpoint('https://api.scholaris.space/v1').setProject('6586b572b4b54e7b58b7')
     },
     provideRouter(routes, withEnabledBlockingInitialNavigation()),
     provideAnimations(),

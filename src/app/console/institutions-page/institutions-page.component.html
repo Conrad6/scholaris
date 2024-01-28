@@ -1,21 +1,74 @@
-<p-toolbar styleClass="rounded-none">
-  <div class="p-toolbar-group-start">
-    <p-inputGroup>
-      <p-inputGroupAddon>
-        <i class="pi pi-search"></i>
-      </p-inputGroupAddon>
-      <input pInputText type="search" placeholder="Search" class="p-1" />
-    </p-inputGroup>
-  </div>
-  <div class="p-toolbar-group-end">
-    <p-button
-      [link]="true"
-      [text]="true"
-      routerLink="new"
-      queryParamsHandling="merge"
-      size="small"
-      icon="pi pi-plus"
-      pTooltip="Create an Institution"
-    ></p-button>
-  </div>
-</p-toolbar>
+<!-- <div class="container mx-auto"> -->
+<p-dataView
+  [value]="institutions()"
+  [totalRecords]="totalRecords()"
+  [paginator]="true"
+  [lazy]="true"
+  (onLazyLoad)="onDataViewLazyLoad($event)"
+  (onPage)="onDataViewPageChanged($event)"
+  [rows]="15"
+  [trackBy]="keySelectorFn"
+  [loading]="loading()"
+  [layout]="layout()"
+  emptyMessage="No records found"
+  [alwaysShowPaginator]="false"
+  (changeLayout)="onLayoutChanged()"
+  class="w-full h-full block"
+>
+  <ng-template pTemplate="emptyMessage">
+    <p>test</p>
+  </ng-template>
+  <ng-template pTemplate="header">
+    <div class="flex items-center justify-between">
+      <p-dataViewLayoutOptions />
+      <div class="inline-flex gap-3 items-center">
+        <div>
+          <p-inputGroup>
+            <input
+              pInputText
+              type="search"
+              placeholder="Search"
+              class="p-1 text-sm"
+            />
+            <button pButton icon="pi pi-search" type="button"></button>
+          </p-inputGroup>
+        </div>
+        <div>
+          <p-button
+            [link]="true"
+            [text]="true"
+            routerLink="new"
+            queryParamsHandling="merge"
+            size="small"
+            icon="pi pi-plus"
+            pTooltip="Create an Institution"
+          ></p-button>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template pTemplate="list" let-slice>
+    <div class="grid grid-nogutter m-3 mt-0 mb-0 pb-3 pt-3 h-full">
+      @for (institution of slice; track $index) {
+      <div
+        class="flex flex-col items-start justify-start p-4 gap-4 border-solid border border-x-0 border-t-0"
+        [ngClass]="{ 'border-slate-600': true }"
+      >
+        <p class="font-bold text-slate-600">{{ institution.name }}</p>
+      </div>
+      }
+    </div>
+  </ng-template>
+  <ng-template pTemplate="grid" let-slice>
+    <div
+      class="h-full grid md:grid-cols-2 lg:grid-cols-4 md:w-[calc(100%-35px)] gap-3 lg:gap-4 m-3 mt-0 mb-0 pb-3 pt-3"
+    >
+      @for (institution of slice; track $index) {
+      <p-card>
+        <p class="font-bold text-slate-600">{{ institution.name }}</p>
+      </p-card>
+      }
+    </div>
+  </ng-template>
+</p-dataView>
+<!-- </div> -->
