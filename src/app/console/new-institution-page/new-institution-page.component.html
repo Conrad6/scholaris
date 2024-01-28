@@ -1,0 +1,131 @@
+<p-card>
+  <h2 class="text-slate-600">New Institution</h2>
+
+  <form>
+    <div class="mt-4 md:w-1/4">
+      <h4 class="block font-medium mb-2">
+        Institution name <span class="text-red-400">*</span>
+      </h4>
+      <p class="text-xs text-slate-500">
+        The name which subscribers would see when joining your institution
+      </p>
+      <span class="p-input-icon-right">
+        <i class="pi pi-spin pi-spinner text-blue-500"></i>
+        <input class="p-inputtext-sm" pInputText />
+      </span>
+    </div>
+
+    <div class="mt-4 md:w-1/4">
+      <h4 class="block font-medium mb-2">
+        Location <span class="text-red-400">*</span>
+      </h4>
+      <p class="text-xs text-slate-500">Where your institution is based in</p>
+      <fieldset class="grid grid-cols-2 gap-2 mt-3" disabled>
+        <div>
+          <input
+            type="text"
+            class="p-inputtext-sm"
+            pInputText
+            autocomplete="address-line1"
+            placeholder="Address Line 1*"
+          />
+        </div>
+        <div>
+          <input
+            type="text"
+            class="p-inputtext-sm"
+            pInputText
+            autocomplete="address-line2"
+            placeholder="Address Line 2"
+          />
+        </div>
+        <div>
+          <input
+            type="text"
+            class="p-inputtext-sm"
+            pInputText
+            autocomplete="address-line3"
+            placeholder="City*"
+          />
+        </div>
+        <div>
+          <input
+            type="text"
+            class="p-inputtext-sm"
+            pInputText
+            autocomplete="country"
+            placeholder="Country*"
+          />
+        </div>
+      </fieldset>
+      <p-toggleButton
+        styleClass="mt-3"
+        size="small"
+        [onIcon]="'pi pi-check-circle'"
+        offIcon="pi pi-map-marker"
+        [onLabel]="'Stop using my current location'"
+        offLabel="Use my current position instead"
+      ></p-toggleButton>
+    </div>
+
+    <div class="mt-4 md:w-1/4">
+      <h4 class="block font-medium mb-2">
+        Contact <small class="text-red-500">*</small>
+      </h4>
+      <small class="block text-slate-500 text-xs"
+        >Your contacts through which your clients will be able to reach
+        you.</small
+      >
+
+      <h5 class="mt-2 flex items-center gap-2">Emails</h5>
+      <div class="flex flex-col gap-2">
+        <p-inputGroup>
+          <button
+            pButton
+            class="p-button-danger"
+            size="small"
+            icon="pi pi-trash"
+          ></button>
+          <input
+            pInputText
+            placeholder="Email address"
+            class="p-inputtext-sm"
+            type="email"
+          />
+        </p-inputGroup>
+        <p-button
+          [outlined]="true"
+          [rounded]="true"
+          icon="pi pi-plus"
+          pTooltip="Add an email address"
+          [size]="'small'"
+        />
+      </div>
+
+      <h5 class="mb-2 flex items-center gap-2">Phone Numbers</h5>
+      <div class="flex flex-col gap-2">
+        <p-inputGroup>
+          <button
+            pButton
+            class="p-button-danger"
+            size="small"
+            icon="pi pi-trash"
+          ></button>
+          <input
+            pInputText
+            placeholder="Phone number"
+            class="p-inputtext-sm"
+            type="tel"
+          />
+        </p-inputGroup>
+        <p-button
+          [outlined]="true"
+          [rounded]="true"
+          icon="pi pi-plus"
+          pTooltip="Add a phone number"
+          [size]="'small'"
+        />
+      </div>
+    </div>
+  </form>
+</p-card>

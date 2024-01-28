@@ -1,10 +1,51 @@
-<form [formGroup]="form">
+<ng-template #errorTemplate let-message>
+    <span class="block text-xs text-red-500 my-2">{{message}}</span>
+</ng-template>
+
+<form (ngSubmit)="onFormSubmit()" [formGroup]="form" class="w-full">
     <p-card header="Sign into Your Account">
-        <input type="email" pInputText formControlName="email" placeholder="Email address"/>
+        <p class="text-slate-500 text-sm">No account? Create one <a
+                class="text-primary font-medium visited:text-primary" queryParamsHandling="preserve" routerLink="../register"
+                [relativeTo]="currentRoute">today!</a></p>
         <ng-template pTemplate="footer">
             <div class="flex gap-3">
-                <p-button label="Sign in" [rounded]="true" size="small" />
+                <p-button type="submit" [disabled]="processing() || form.invalid"
+                    icon="pi {{processing() ? 'pi-spinner pi-spin' : 'pi-lock'}}" label="Sign in" [rounded]="true"
+                    size="small" />
             </div>
         </ng-template>
+
+        @if(state?.['isNew']) {
+        <p
+            class="text-sm flex items-center gap-3 text-green-500 bg-green-500 bg-opacity-10 border-green-500 border rounded-md p-2 w-fit">
+            <i class="pi pi-check-circle"></i> Your account was created successfully
+        </p>
+        }
+        @if(errorMessage()) {
+        <p
+            class="text-sm flex items-center gap-3 text-red-500 bg-red-500 bg-opacity-10 border-red-500 border rounded-md w-fit p-2">
+            <i class="pi pi-times-circle"></i> {{errorMessage()}}
+        </p>
+        }
+
+        <fieldset class="flex flex-col gap-2">
+            <div class="w-full">
+                <input autocomplete="email" class="w-full" type="email" pInputText formControlName="email"
+                    placeholder="Your email address" />
+                @if (form.controls.email.touched && form.controls.email.invalid) {
+                @if(form.controls.email.hasError('required')) {
+                <ng-container [ngTemplateOutlet]="errorTemplate"
+                    [ngTemplateOutletContext]="{$implicit: 'This field is required'}" />
+                }
+                }
+            </div>
+            <input autocomplete="current-password" class="w-full" type="password" pInputText formControlName="password"
+                placeholder="Your password" />
+            <!-- <small class="text-slate-500" id="hint">You will receive a link in your email inbox with a link which you'll
+                use
+                to sign into your account.</small> -->
+            <a tabindex="-1" queryParamsHandling="preserve" routerLink="../forgot-email" class="text-sm text-primary font-medium block mt-1">Forgot
+                password?</a>
+        </fieldset>
     </p-card>
 </form>

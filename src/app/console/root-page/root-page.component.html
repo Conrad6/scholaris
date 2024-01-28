@@ -1,0 +1,49 @@
+<nav>
+    <div class="container mx-auto">
+        <p-toolbar styleClass="rounded-none">
+            <div class="p-toolbar-group-start">
+                <a routerLink="/">[Logo Here]</a>
+            </div>
+            @if(user()) {
+            <div class="p-toolbar-group-end">
+                <p-menu #accountPopup [popup]="true" [model]="accountItems" />
+                <p-button title="Account Menu" (onClick)="accountPopup.toggle($event)" [text]="true" [rounded]="true"
+                    size="small" styleClass="p-button-sm">
+                    <ng-template pTemplate="icon">
+                        <p-avatar size="large" [image]="logo()" shape="circle" />
+                    </ng-template>
+                </p-button>
+            </div>
+            }
+        </p-toolbar>
+    </div>
+</nav>
+<!-- <div class="mx-4"> -->
+<p-tabMenu [model]="subRoutes" [activeItem]="activeItem" styleClass="">
+    <ng-template pTemplate="item" let-item let-i="index">
+        <a [routerLink]="item.routerLink" class="p-menuitem-link flex gap-3 items-center p-3">
+            <div class="inline-flex gap-2 items-center">
+                <i [class]="item.icon"></i>
+                <span>{{item.label}}</span>
+            </div>
+            <div>
+                @if(item.badge) {
+                <p-badge [value]="item.badge" [severity]="item.badgeSeverity"></p-badge>
+                }
+            </div>
+        </a>
+    </ng-template>
+</p-tabMenu>
+
+<main class=" max-h-[calc(100%-90px-46px)] h-[calc(100%-90px-46px)] relative overflow-auto">
+    <router-outlet />
+    <!-- @if (navigating()) { -->
+    <div [ngClass]="{
+        'absolute backdrop-opacity-100 backdrop-blur-lg left-0 top-0 w-full h-full bg-white bg-opacity-50 z-[999] flex justify-center items-center': true,
+        'opacity-0 pointer-events-none': !navigating(),
+        'opacity-100 pointer-events-auto': navigating()
+    }">
+        <p-progressSpinner />
+    </div>
+    <!-- } -->
+</main>
