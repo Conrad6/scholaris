@@ -1,6 +1,8 @@
 import { NgClass } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { AppwriteException } from 'appwrite';
+import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { DataViewLazyLoadEvent, DataViewModule, DataViewPageEvent } from 'primeng/dataview';
@@ -12,18 +14,6 @@ import { ToolbarModule } from 'primeng/toolbar';
 import { TooltipModule } from 'primeng/tooltip';
 import { Institution } from '../../../models';
 import { InstitutionService } from '../../state/services/institution.service';
-import { MessageService } from 'primeng/api';
-import { AppwriteException } from 'appwrite';
-
-function randomCode(length = 10) {
-  const alphabet = 'abcdefghijklmnopqrstuvwxyz0123456789';
-  let s = '';
-  for (let i = 0; i < length; i++) {
-    s += alphabet[Math.floor(Math.random() * alphabet.length)];
-  }
-
-  return s;
-}
 
 @Component({
   selector: 'app-institutions-page',
@@ -56,7 +46,6 @@ export class InstitutionsPageComponent {
   private toastService = inject(MessageService)
 
   onLayoutChanged() {
-    console.log('test');
     this.layout.update(val => val == 'grid' ? 'list' : 'grid');
   }
 
