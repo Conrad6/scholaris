@@ -3,10 +3,10 @@
 </ng-template>
 
 <form (ngSubmit)="onFormSubmit()" [formGroup]="form" class="w-full">
-    <p-card header="Sign into Your Account">
+    <p-card header="Sign into Your Account" class="w-full">
         <p class="text-slate-500 text-sm">No account? Create one <a
                 class="text-primary font-medium visited:text-primary" queryParamsHandling="preserve" routerLink="../register"
-                [relativeTo]="currentRoute">today!</a></p>
+                [relativeTo]="currentRoute">now</a></p>
         <ng-template pTemplate="footer">
             <div class="flex gap-3">
                 <p-button type="submit" [disabled]="processing() || form.invalid"
@@ -21,14 +21,8 @@
             <i class="pi pi-check-circle"></i> Your account was created successfully
         </p>
         }
-        @if(errorMessage()) {
-        <p
-            class="text-sm flex items-center gap-3 text-red-500 bg-red-500 bg-opacity-10 border-red-500 border rounded-md w-fit p-2">
-            <i class="pi pi-times-circle"></i> {{errorMessage()}}
-        </p>
-        }
 
-        <fieldset class="flex flex-col gap-2">
+        <fieldset class="flex flex-col gap-2" [disabled]="processing()">
             <div class="w-full">
                 <input autocomplete="email" class="w-full" type="email" pInputText formControlName="email"
                     placeholder="Your email address" />
@@ -49,3 +43,4 @@
         </fieldset>
     </p-card>
 </form>
+<p-toast />

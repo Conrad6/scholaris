@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ng serve --host 0.0.0.0",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
@@ -24,6 +24,9 @@
     "@ngxs/storage-plugin": "^3.8.2",
     "@ngxs/store": "^3.8.2",
     "appwrite": "^13.0.1",
+    "countries-list": "^3.0.6",
+    "jdenticon": "^3.2.0",
+    "ngx-jdenticon": "^2.0.0",
     "primeflex": "^3.3.1",
     "primeicons": "^6.0.1",
     "primeng": "^17.2.0",
@@ -36,6 +39,8 @@
     "@angular-devkit/build-angular": "^17.0.8",
     "@angular/cli": "^17.0.8",
     "@angular/compiler-cli": "^17.1.0",
+    "@types/google-libphonenumber": "^7.4.30",
+    "@types/intl-tel-input": "^18.1.4",
     "@types/jasmine": "~5.1.0",
     "@types/validator": "^13.11.7",
     "autoprefixer": "^10.4.16",

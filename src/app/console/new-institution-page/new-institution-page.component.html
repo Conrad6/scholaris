@@ -1,74 +1,122 @@
+<ng-template #errorTemplate let-message>
+  <span class="block text-xs text-red-500 my-2">{{ message }}</span>
+</ng-template>
+
+<ng-template #fieldRequiredMessageTemplate>
+  <ng-container
+    [ngTemplateOutlet]="errorTemplate"
+    [ngTemplateOutletContext]="{ $implicit: 'This field is required' }"
+  />
+</ng-template>
+
 <p-card>
   <h2 class="text-slate-600">New Institution</h2>
 
-  <form>
-    <div class="mt-4 md:w-1/4">
+  <form [formGroup]="form" (ngSubmit)="onFormSubmit()" class="w-full">
+    <div class="mt-4 md:w-1/2 w-full">
       <h4 class="block font-medium mb-2">
         Institution name <span class="text-red-400">*</span>
       </h4>
       <p class="text-xs text-slate-500">
-        The name which subscribers would see when joining your institution
+        The subscriber-facing name of your institution
       </p>
       <span class="p-input-icon-right">
-        <i class="pi pi-spin pi-spinner text-blue-500"></i>
-        <input class="p-inputtext-sm" pInputText />
+        @if (form.controls.name.pending) {
+        <i
+          pTooltip="Checking Availability"
+          class="pi pi-spin pi-spinner text-blue-500"
+        ></i>
+        }
+        <input formControlName="name" class="p-inputtext-sm" pInputText />
+        @if(form.controls.name.invalid && form.controls.name.dirty) {
+        @if(form.controls.name.hasError('required')) {
+        <ng-container [ngTemplateOutlet]="fieldRequiredMessageTemplate" />
+        } @if(form.controls.name.hasError('nameUnavailable')) {
+        <ng-conainer
+          [ngTemplateOutlet]="errorTemplate"
+          [ngTemplateOutletContext]="{ $implicit: 'Name is unavailable' }"
+        />
+        } }
       </span>
     </div>
 
-    <div class="mt-4 md:w-1/4">
+    <div class="mt-4 md:w-1/2 w-full">
       <h4 class="block font-medium mb-2">
         Location <span class="text-red-400">*</span>
       </h4>
       <p class="text-xs text-slate-500">Where your institution is based in</p>
-      <fieldset class="grid grid-cols-2 gap-2 mt-3" disabled>
-        <div>
-          <input
-            type="text"
-            class="p-inputtext-sm"
-            pInputText
-            autocomplete="address-line1"
-            placeholder="Address Line 1*"
-          />
-        </div>
-        <div>
-          <input
-            type="text"
-            class="p-inputtext-sm"
-            pInputText
-            autocomplete="address-line2"
-            placeholder="Address Line 2"
-          />
-        </div>
-        <div>
-          <input
-            type="text"
-            class="p-inputtext-sm"
-            pInputText
-            autocomplete="address-line3"
-            placeholder="City*"
-          />
-        </div>
-        <div>
-          <input
-            type="text"
-            class="p-inputtext-sm"
-            pInputText
-            autocomplete="country"
-            placeholder="Country*"
-          />
-        </div>
-      </fieldset>
       <p-toggleButton
-        styleClass="mt-3"
+        styleClass="mt-3 font-medium"
         size="small"
+        formControlName="useCurrentLocation"
         [onIcon]="'pi pi-check-circle'"
         offIcon="pi pi-map-marker"
         [onLabel]="'Stop using my current location'"
         offLabel="Use my current position instead"
       ></p-toggleButton>
+      @if(!form.controls.useCurrentLocation.value) {
+      <fieldset
+        [formGroup]="form.controls.location"
+        class="grid grid-cols-2 gap-2 mt-3"
+      >
+        <div>
+          <input
+            type="text"
+            pInputText
+            autocomplete="address-line1"
+            placeholder="Address Line 1*"
+            formControlName="line1"
+          />
+          @if(form.controls.location.controls['line1'].invalid &&
+          form.controls.location.controls['line1'].dirty){
+          @if(form.controls.location.controls['line1'].hasError('required')) {
+          <ng-container [ngTemplateOutlet]="fieldRequiredMessageTemplate" />
+          } }
+        </div>
+        <div>
+          <input
+            type="text"
+            pInputText
+            autocomplete="address-line2"
+            placeholder="Address Line 2"
+            formControlName="line2"
+          />
+        </div>
+        <div>
+          <input
+            type="text"
+            pInputText
+            autocomplete="address-line3"
+            placeholder="City*"
+            formControlName="city"
+          />
+          @if(form.controls.location.controls['city'].invalid &&
+          form.controls.location.controls['city'].dirty){
+          @if(form.controls.location.controls['city'].hasError('required')) {
+          <ng-container [ngTemplateOutlet]="fieldRequiredMessageTemplate" />
+          } }
+        </div>
+        <div>
+          <p-autoComplete
+            [suggestions]="filteredCountries() | slice : 0 : 10"
+            field="native"
+            [dropdown]="true"
+            [forceSelection]="true"
+            (completeMethod)="onFilterCountries($event)"
+            formControlName="country"
+            placeholder="Country *"
+          />
+          @if(form.controls.location.controls['country'].invalid &&
+          form.controls.location.controls['country'].dirty){
+          @if(form.controls.location.controls['country'].hasError('required')) {
+          <ng-container [ngTemplateOutlet]="fieldRequiredMessageTemplate" />
+          } }
+        </div>
+      </fieldset>
+      }
     </div>
 
-    <div class="mt-4 md:w-1/4">
+    <div class="mt-4 md:w-1/2 w-full">
       <h4 class="block font-medium mb-2">
         Contact <small class="text-red-500">*</small>
       </h4>
@@ -78,47 +126,93 @@
       >
 
       <h5 class="mt-2 flex items-center gap-2">Emails</h5>
-      <div class="flex flex-col gap-2">
+      <div class="space-y-2">
+        @for(control of form.controls.contacts.controls.emails.controls; track
+        $index) {
         <p-inputGroup>
-          <button
-            pButton
-            class="p-button-danger"
-            size="small"
-            icon="pi pi-trash"
-          ></button>
           <input
             pInputText
             placeholder="Email address"
             class="p-inputtext-sm"
             type="email"
+            [formControl]="control"
           />
-        </p-inputGroup>
-        <p-button
-          [outlined]="true"
-          [rounded]="true"
-          icon="pi pi-plus"
-          pTooltip="Add an email address"
-          [size]="'small'"
-        />
-      </div>
-
-      <h5 class="mb-2 flex items-center gap-2">Phone Numbers</h5>
-      <div class="flex flex-col gap-2">
-        <p-inputGroup>
           <button
+            type="button"
+            (click)="removeEmailContact($index)"
             pButton
             class="p-button-danger"
             size="small"
             icon="pi pi-trash"
           ></button>
-          <input
-            pInputText
-            placeholder="Phone number"
-            class="p-inputtext-sm"
-            type="tel"
-          />
         </p-inputGroup>
+        @if (control.invalid && control.dirty) {
+        @if(control.hasError('required')) {
+        <ng-container [ngTemplateOutlet]="fieldRequiredMessageTemplate" />
+        } @if(control.hasError('email')) {
+        <ng-container
+          [ngTemplateOutlet]="errorTemplate"
+          [ngTemplateOutletContext]="{ $implicit: 'Invalid email address' }"
+        />
+        } } }
         <p-button
+          [outlined]="true"
+          [rounded]="true"
+          icon="pi pi-plus"
+          (onClick)="addEmailContact()"
+          pTooltip="Add an email address"
+          class="inline mt-3"
+          [size]="'small'"
+        />
+      </div>
+
+      <h5 class="mb-2 flex items-center gap-2">Phone Numbers</h5>
+      <div class="space-y-2">
+        @for(group of form.controls.contacts.controls.phoneNumbers.controls;
+        track $index) {
+        <div>
+          <div [formGroup]="group" class="inline">
+            <p-inputGroup>
+              <p-treeSelect
+                placeholder="Country Code"
+                [filter]="true"
+                [filterInputAutoFocus]="true"
+                formControlName="code"
+                containerStyleClass="w-full rounded-r-none"
+                [options]="phoneCodes()"
+              />
+              <input
+                pInputText
+                placeholder="Phone number"
+                formControlName="number"
+                class="p-inputtext-sm"
+                pKeyFilter="num"
+                type="text"
+              />
+
+              <button
+                pButton
+                (click)="removePhoneContact($index)"
+                class="p-button-danger"
+                size="small"
+                type="button"
+                icon="pi pi-trash"
+              ></button>
+            </p-inputGroup>
+          </div>
+          @if(group.invalid && group.dirty) {
+          @if(group.hasError('invalidPhoneNumber')) {
+          <ng-container
+            [ngTemplateOutlet]="errorTemplate"
+            [ngTemplateOutletContext]="{
+              $implicit: 'Invalid phone number'
+            }"
+          />
+          } }
+        </div>
+        }
+        <p-button
+          (onClick)="addPhoneContact()"
           [outlined]="true"
           [rounded]="true"
           icon="pi pi-plus"
@@ -127,5 +221,20 @@
         />
       </div>
     </div>
+
+    <div class="mt-4 md:w-1/2 w-full">
+      <p-button
+        [disabled]="form.invalid"
+        type="submit"
+        severity="primary"
+        label="Save"
+        class="mt-3"
+        size="small"
+        [rounded]="true"
+        icon="pi pi-save"
+        loadingIcon="pi pi-spin pi-spinner"
+      />
+    </div>
   </form>
 </p-card>
+<p-toast />
