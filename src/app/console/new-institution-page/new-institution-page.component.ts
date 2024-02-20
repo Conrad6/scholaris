@@ -2,22 +2,26 @@ import { NgClass, NgTemplateOutlet, SlicePipe } from '@angular/common';
 import { Component, DestroyRef, Injector, OnInit, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AbstractControl, FormArray, FormControl, FormGroup, FormRecord, FormsModule, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
-import { ICountryData, TCountryCode, getCountryDataList, getEmojiFlag } from 'countries-list';
+import { Store } from '@ngxs/store';
+import { ICountryData, getCountryDataList } from 'countries-list';
+import { PhoneNumberUtil } from 'google-libphonenumber';
 import { MessageService, TreeNode } from 'primeng/api';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { InputTextModule } from 'primeng/inputtext';
+import { KeyFilterModule } from 'primeng/keyfilter';
 import { StepsModule } from 'primeng/steps';
 import { ToastModule } from 'primeng/toast';
-import { KeyFilterModule } from 'primeng/keyfilter';
 import { ToggleButtonModule } from 'primeng/togglebutton';
 import { TreeSelectModule } from 'primeng/treeselect';
-import { map, of } from 'rxjs';
+import { map, of, timer } from 'rxjs';
+import { Institution } from '../../../models';
 import { InstitutionService } from '../../state/services/institution.service';
 import { UtilService } from '../../state/services/util.service';
-import { PhoneNumberUtil } from 'google-libphonenumber';
+import { Navigate } from '@ngxs/router-plugin';
+import { ActivatedRoute } from '@angular/router';
 
 function institutionAvailabilityValidator(injector: Injector) {
   const institutionService = injector.get(InstitutionService);
@@ -68,9 +72,11 @@ export class NewInstitutionPageComponent implements OnInit {
   private readonly messageService = inject(MessageService);
   private readonly phoneUtil = inject(PhoneNumberUtil);
   private readonly institutionService = inject(InstitutionService);
+  private readonly activeRoute = inject(ActivatedRoute);
+  private readonly store = inject(Store);
 
   readonly form = new FormGroup({
-    name: new FormControl<string>('', { validators: [Validators.required], asyncValidators: [institutionAvailabilityValidator(this.injector)] }),
+    name: new FormControl<string>('', { validators: [Validators.required, Validators.minLength(6)], asyncValidators: [institutionAvailabilityValidator(this.injector)] }),
     useCurrentLocation: new FormControl(false),
     location: new FormRecord({}),
     slug: new FormControl<string>(''),
@@ -121,12 +127,6 @@ export class NewInstitutionPageComponent implements OnInit {
       takeUntilDestroyed(this.destroyRef)
     ).subscribe(val => {
       this.locationStateHistroyValue.set(val);
-    });
-
-    this.form.controls.contacts.controls.phoneNumbers.valueChanges.subscribe(() => {
-      this.form.controls.contacts.controls.phoneNumbers.controls.forEach(group => {
-        console.log(group.errors);
-      })
     });
 
     if (this.form.controls.useCurrentLocation.value) {
@@ -215,8 +215,33 @@ export class NewInstitutionPageComponent implements OnInit {
 
   onFormSubmit() {
     const { contacts, location, name, useCurrentLocation } = this.form.value;
-    if(useCurrentLocation) {
 
+    const emails = contacts?.emails?.filter(x => !!x).map(x => x as string) ?? [];
+    const phoneNumbers = contacts?.phoneNumbers?.map(({ code, number }) => `+${code.data}${number}`) ?? [];
+    let _location = location;
+    if (!useCurrentLocation) {
+      _location = { ...location, country: (location!['country'] as any).iso3  }
     }
+
+    this.institutionService.createInstitution(String(name), { phoneNumbers, emails }, { ..._location, useCurrentLocation: useCurrentLocation ? true : false }).pipe(
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe({
+      next: (institution: Institution) => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Success',
+          detail: `Institution ${institution.name} created successfully.`
+        });
+        this.form.reset();
+        this.store.dispatch(new Navigate(['..'], undefined, { relativeTo: this.activeRoute }))
+      },
+      error: (error: Error) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: error.message
+        });
+      }
+    });
   }
 }

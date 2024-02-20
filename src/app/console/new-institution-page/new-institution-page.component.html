@@ -22,13 +22,15 @@
       </p>
       <span class="p-input-icon-right">
         @if (form.controls.name.pending) {
-        <i
-          pTooltip="Checking Availability"
-          class="pi pi-spin pi-spinner text-blue-500"
-        ></i>
+        <i class="pi pi-spin pi-spinner text-blue-500"></i>
         }
         <input formControlName="name" class="p-inputtext-sm" pInputText />
-        @if(form.controls.name.invalid && form.controls.name.dirty) {
+        @if(form.controls.name.pending) {
+        <span class="block text-xs text-blue-500"
+          ><i class="fa-solid fa-refresh animate-spin"></i> Checking
+          availablility</span
+        >
+        } @if(form.controls.name.invalid && form.controls.name.dirty) {
         @if(form.controls.name.hasError('required')) {
         <ng-container [ngTemplateOutlet]="fieldRequiredMessageTemplate" />
         } @if(form.controls.name.hasError('nameUnavailable')) {
