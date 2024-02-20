@@ -17,6 +17,11 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
+            "allowedCommonJsDependencies": [
+              "cross-fetch",
+              "isomorphic-form-data",
+              "google-libphonenumber"
+            ],
             "outputPath": "dist/scholaris",
             "index": "src/index.html",
             "browser": "src/main.ts",
@@ -46,7 +51,7 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kb",
+                  "maximumWarning": "800kb",
                   "maximumError": "1mb"
                 },
                 {
